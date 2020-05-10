@@ -20,7 +20,7 @@ def generarSecuencia(secuencia, inicio, fin):
   for i in range(inicio, fin):
     secuencia.append(GCL(secuencia[i-1]))
 secuencia2 = [0.7]
-generarSecuencia(secuencia2, 1, 500000)
+generarSecuencia(secuencia2, 1, 100000)
 
 # Para que de numeros entre 0 y 1, divido por su modulo
 secuencia2 = list(map(lambda n: n / modulo, secuencia2))
@@ -47,7 +47,6 @@ u = np.random.rand()
 f = []
 for i in secuencia2:
     f.append(aproximador_de_raices((i)))
-    #f.append(aproximador_de_raices((0.8*i+0.1)))
 
 
 plot.hist(f, color='green', bins=75, alpha=0.5, ec='black')
