@@ -29,27 +29,32 @@ secuencia2 = list(map(lambda n: n / modulo, secuencia2))
 
 #ejercicio 3)
 # Problema: no puedo despejar completamente x para obtener la funcion inversa, solucion: la aproximo
-def aproximador_de_raices(u):
-    values = np.arange(-pi/2, pi/2, 0.01)
+def aproximador_de_raices(u,values,acumulative):
     min_dif = 10
     x = 3
-    for z in values:
-	#La distribucion inversa resulta 13*x/(12*pi) -x³/(3*pi³) + 0.5 = u
-	#Igualo a 0 y obtengo x por método de aproximacion de raices(que termina siendo mucho mas ineficiente)
-        calc = abs((13*z/(12*pi)) - ((z**3)/(3*(pi**3))) + 0.5- u)
+    for z in range(len(values)):
+        calc = abs(acumulative[z] - u)
         if( calc<min_dif):
-            x = z
+            x = values[z]
             min_dif = calc
     return(x)
 
-# otro intento, esta vez reduciendo en 0.1 el rando de los costados
 u = np.random.rand()
 f = []
+lenght_steps = pi/32	#debe ser un numero tal que -pi/2 + N*lenght_stepts = pi/2 para que los valores limites sean -pi/2 y pi/2
+values = np.arange(-pi/2, (pi/2)+lenght_steps, lenght_steps)
+cant_bins = int(len(values))
+acumulative = []
+for z in values:
+    acumulative.append((13*z/(12*pi)) - ((z**3)/(3*(pi**3))) + 0.5)
+
 for i in secuencia2:
-    f.append(aproximador_de_raices((i)))
+    f.append(aproximador_de_raices(i,values,acumulative))
+
+print(values)
 
 
-plot.hist(f, color='green', bins=75, alpha=0.5, ec='black')
+plot.hist(f, color='green', bins=cant_bins, alpha=0.5, ec='black')
 plot.grid(True)
 plot.title('Funcion de probabilidad acumulada')
 plot.xlim((-pi/2), (pi/2))
