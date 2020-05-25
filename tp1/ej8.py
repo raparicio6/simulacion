@@ -1,24 +1,12 @@
-import random
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-
-fig, ax = plt.subplots()
-xdata, ydata = [], []
-ln, = plt.plot([], [], 'ro')
-
-def init():
-    ax.set_xlim(-10, 20)
-    ax.set_ylim(-10, 20)
-    return ln,
-
-def update(frame):
-    ln.set_data(posiciones[frame][0], posiciones[frame][1])
-    return ln,
-
+import numpy 
+import pylab 
+import random 
+  
 x = 0
 y = 0
-positions = []
+xPositions = []
+yPositions = []
+
 for i in range(1000):
     direction = random.choice(["up", "down", "left", "right"])
     
@@ -33,8 +21,11 @@ for i in range(1000):
 
     if(direction == "left"):
         x = x-1
-    positions.append([x, y])
-
-
-ani = FuncAnimation(fig, update, frames=len(positions),init_func=init, interval=500, blit=True)
-plt.show()
+    xPositions.append(x)
+    yPositions.append(y)
+      
+  
+# plotting stuff: 
+pylab.title("Movimiento aleatorio de particula 2D") 
+pylab.plot(xPositions, yPositions) 
+pylab.show() 
