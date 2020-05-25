@@ -1,12 +1,14 @@
 import numpy 
 import pylab 
 import random 
-  
+
+#Declara posicion inicial y arrays con futuras posiciones
 x = 0
 y = 0
 xPositions = []
 yPositions = []
 
+#Random Walk de la particula
 for i in range(1000):
     direction = random.choice(["up", "down", "left", "right"])
     
@@ -25,7 +27,7 @@ for i in range(1000):
     yPositions.append(y)
       
   
-# plotting stuff: 
+# Visualizacion 
 pylab.title("Movimiento aleatorio de particula 2D") 
 pylab.plot(xPositions, yPositions) 
 pylab.show() 
