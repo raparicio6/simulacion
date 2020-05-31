@@ -17,13 +17,15 @@ x = [0 for x in range(samples)]
 y = [0 for y in range(samples)]
 state = [healthy for state in range(samples)]
 sick_people = []
+movements_till_cured = [0 for movements_till_cured in range(samples)]
 
 people_who_can_move = 0
 for i in range(samples):
-	x[i]=np.random.rand()*right_limit
-	y[i]=np.random.rand()*upper_limit
+	x[i]=np.random.rand()*100
+	y[i]=np.random.rand()*100
 	if (np.random.rand() < 0.05):
 		state[i]=sick
+		movements_till_cured[i] = 20
 	movement = random.choice(["can move","can't move"])
 	if(movement=="can move"):  #calculo con un 50% de probabilidades si se mueve
 		people_who_can_move = people_who_can_move + 1
@@ -31,7 +33,7 @@ for i in range(samples):
 
 
 sc = ax.scatter(x,y,c=state)
-plt.xlim(0,right_limit)
+plt.xlim(0,upper_limit)
 plt.ylim(0,upper_limit)
 
 
@@ -46,6 +48,12 @@ def got_sick(i,current_state):
 				current_state = sick
 	return(current_state)
 			
+
+def reduce_movements_to_cure(i):
+	if(state[i]==sick and movements_till_cured[i]>0):
+		movements_till_cured[i] = movements_till_cured[i]-1
+	if(state[i]==sick and movements_till_cured[i]==0 and np.random.rand() < 0.8):
+		state[i]=healthy
 
 
 def update_sick_ones():
@@ -88,7 +96,7 @@ def count_sick():
 def save_charts(length):
 	ani.event_source.stop()
 	plt.show(block=False)
-	plt.savefig('scatter_10_A_3.png')
+	plt.savefig('scatter_10_B_3.png')
 	plt.cla()
 	plt.clf()
 	plt.plot(np.arange(1, length, 1), sick_people)
@@ -97,7 +105,7 @@ def save_charts(length):
 	plt.ylabel('cantidad infectados')
 	plt.xlabel('tiempo')
 	plt.title('avance infectados')
-	plt.savefig('avance_infectados_10_A_3.png')
+	plt.savefig('avance_infectados_10_B_3.png')
 	plt.cla()
 	plt.clf()
 	plt.plot(np.arange(1, length, 1), samples-np.array(sick_people))
@@ -106,11 +114,14 @@ def save_charts(length):
 	plt.ylabel('cantidad sanos')
 	plt.xlabel('tiempo')
 	plt.title('avance sanos')
-	plt.savefig('avance_sanos_10_A_3.png')
+	plt.savefig('avance_sanos_10_B_3.png')
 
 def animate(i):
 	for i in range(people_who_can_move):
 		move(i)
+
+	for i in range(samples):
+		reduce_movements_to_cure(i)
 
 	update_sick_ones()
 		

@@ -16,22 +16,26 @@ fig, ax = plt.subplots()
 x = [0 for x in range(samples)]
 y = [0 for y in range(samples)]
 state = [healthy for state in range(samples)]
+movements_left = [0 for movements_left in range(samples)]
 sick_people = []
+movements_till_cured = [0 for movements_till_cured in range(samples)]
 
-people_who_can_move = 0
+
 for i in range(samples):
-	x[i]=np.random.rand()*right_limit
-	y[i]=np.random.rand()*upper_limit
+	x[i]=np.random.rand()*100
+	y[i]=np.random.rand()*100
 	if (np.random.rand() < 0.05):
 		state[i]=sick
-	movement = random.choice(["can move","can't move"])
-	if(movement=="can move"):  #calculo con un 50% de probabilidades si se mueve
-		people_who_can_move = people_who_can_move + 1
+		movements_left[i] = int((np.random.rand()*10))+10
+		movements_till_cured[i] = 20
+	else:
+		state[i]=healthy
+		
 		
 
 
 sc = ax.scatter(x,y,c=state)
-plt.xlim(0,right_limit)
+plt.xlim(0,upper_limit)
 plt.ylim(0,upper_limit)
 
 
@@ -44,13 +48,25 @@ def got_sick(i,current_state):
 		if((state[z]==sick) and abs(x[z]-x[i])<2 and abs(y[z]-y[i])<2 and current_state==healthy):
 			if(np.random.rand() < 0.6):
 				current_state = sick
+				movements_left[i] = int((np.random.rand()*10))+10
 	return(current_state)
 			
 
 
+def reduce_movements_left(i):
+	if(state[i]==sick and movements_left[i]>0):
+		movements_left[i] = movements_left[i]-1
+	if(state[i]==sick and movements_till_cured[i]>0):
+		movements_till_cured[i] = movements_till_cured[i]-1
+
+def cure(i):
+	if(state[i]==sick and movements_till_cured[i]==0 and np.random.rand() < 0.8):
+		state[i]=healthy
+
 def update_sick_ones():
 	for i in range(samples):
 		state[i] = got_sick(i,state[i])
+
 
 def posible_movements(i):
 	choises = []
@@ -66,16 +82,18 @@ def posible_movements(i):
 
 
 def move(i):
-	choises = posible_movements(i)
-	movement = random.choice(choises)
-	if(movement=="up"):
-		x[i]=move_piece(x[i],1)
-	if(movement=="down"):
-		x[i]=move_piece(x[i],-1)
-	if(movement=="right"):
-		y[i]=move_piece(y[i],1)
-	if(movement=="left"):
-		y[i]=move_piece(y[i],-1)
+	if(state[i]==healthy or movements_left[i]>0): #se mueven los sanos o infectados que les queden movimientos
+		choises = posible_movements(i)
+		movement = random.choice(choises)
+		if(movement=="up"):
+			x[i]=move_piece(x[i],1)
+		if(movement=="down"):
+			x[i]=move_piece(x[i],-1)
+		if(movement=="right"):
+			y[i]=move_piece(y[i],1)
+		if(movement=="left"):
+			y[i]=move_piece(y[i],-1)
+
 
 def count_sick():
 	sick_counter = 0
@@ -84,11 +102,10 @@ def count_sick():
 			sick_counter = sick_counter + 1
 	return(sick_counter)
 
-
 def save_charts(length):
 	ani.event_source.stop()
 	plt.show(block=False)
-	plt.savefig('scatter_10_A_3.png')
+	plt.savefig('scatter_10_B_2.png')
 	plt.cla()
 	plt.clf()
 	plt.plot(np.arange(1, length, 1), sick_people)
@@ -97,7 +114,7 @@ def save_charts(length):
 	plt.ylabel('cantidad infectados')
 	plt.xlabel('tiempo')
 	plt.title('avance infectados')
-	plt.savefig('avance_infectados_10_A_3.png')
+	plt.savefig('avance_infectados_10_B_2.png')
 	plt.cla()
 	plt.clf()
 	plt.plot(np.arange(1, length, 1), samples-np.array(sick_people))
@@ -106,11 +123,14 @@ def save_charts(length):
 	plt.ylabel('cantidad sanos')
 	plt.xlabel('tiempo')
 	plt.title('avance sanos')
-	plt.savefig('avance_sanos_10_A_3.png')
+	plt.savefig('avance_sanos_10_B_2.png')
+
 
 def animate(i):
-	for i in range(people_who_can_move):
+	for i in range(int(samples)):
 		move(i)
+		reduce_movements_left(i)
+		cure(i)
 
 	update_sick_ones()
 		
@@ -128,7 +148,7 @@ def animate(i):
 		print('termino')
 	elif(sick_ones==100):
 		save_charts(len(sick_people)+1) #si ya están todos contagiados, paro el grafico
-		print('termino')		
+		print('termino')
 
 ani = matplotlib.animation.FuncAnimation(fig, animate,
                 frames=2, interval=10, repeat=True) 

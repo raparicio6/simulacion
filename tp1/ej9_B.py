@@ -80,19 +80,27 @@ def move(i):
 
 
 def save_charts(length):
-	plt.savefig('scatter_9_A.png')
+	plt.savefig('scatter_9_B.png')
 	ani.event_source.stop()
 	plt.show(block=False)
 	plt.cla()
 	plt.clf()
-	plt.plot(np.arange(1, length, 1), left_side_graph)
+	plt.plot(np.arange(0, len(left_side_graph), 1), left_side_graph)
+	plt.xlim(0,len(left_side_graph))
+	plt.ylim(0.65,1)
+	plt.ylabel('proporcion')
+	plt.xlabel('tiempo')
 	plt.title('Proporcion azules lado izquierdo')
-	plt.savefig('Proporcion_azules_lado_izquierdo_9_A.png')
+	plt.savefig('Proporcion_azules_lado_izquierdo_9_B.png')
 	plt.cla()
 	plt.clf()
-	plt.plot(np.arange(1, length, 1), right_side_graph)
+	plt.plot(np.arange(0, len(right_side_graph), 1), right_side_graph)
+	plt.xlim(0,len(left_side_graph))
+	plt.ylim(0.65,1)
+	plt.ylabel('proporcion')
+	plt.xlabel('tiempo')
 	plt.title('Proporcion amarillos lado derecho')
-	plt.savefig('Proporcion_amarillos_lado_derecho_9_A.png')
+	plt.savefig('Proporcion_amarillos_lado_derecho_9_B.png')
 
 
 def count_proportions_side():
@@ -133,8 +141,8 @@ def animate(i):
 	if((len(left_side_graph)%100) == 0):
 		print(len(left_side_graph)) #referencia para saber cuantos instantes van
 		print(proportions)
-	if(len(left_side_graph)>2000):	#al pasar la longitud,completé los 2000 instantes de tiempo y paro el grafico
-		save_charts(2002)
+	if(len(left_side_graph)>3000):	#al pasar la longitud,completé los 2000 instantes de tiempo y paro el grafico
+		save_charts(3002)
 		print('termino')
 
 ani = matplotlib.animation.FuncAnimation(fig, animate,
