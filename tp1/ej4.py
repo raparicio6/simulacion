@@ -1,8 +1,10 @@
-import math
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import random
+
+
+c = (2 * stats.norm.pdf(1)) / stats.expon.pdf(1)
 
 
 def generate_by_acceptance_rejection(n, mu, sigma):
@@ -11,11 +13,9 @@ def generate_by_acceptance_rejection(n, mu, sigma):
 
   while len(numbers) < n:
     x = np.random.exponential()
-    probability = stats.norm.pdf(x) / (((2 * stats.norm.pdf(1)) / stats.expon.pdf(1))
-                                       * stats.expon.pdf(x))
-    y = random.random()
-  
-    if y <= probability:
+    probability = stats.norm.pdf(x) / (c * stats.expon.pdf(x))
+
+    if random.random() <= probability:
       if random.random() < 0.5:
         numbers = np.append(numbers, x)
       else:
@@ -30,14 +30,14 @@ def generate_by_acceptance_rejection(n, mu, sigma):
 def draw_histogram(numbers):
   ax = plt.figure().add_subplot(1, 1, 1)
   ax.hist(numbers, weights=np.zeros_like(numbers) +
-          1.0 / numbers.size, color='green', ec='black', alpha=0.5, bins=20)
+          1.0 / numbers.size, color="green", ec="black", alpha=0.5, bins=20)
   ax.set_xlabel("Rango numérico")
   ax.set_ylabel("Frecuencia relativa")
 
 
-def draw_normal_pdf(mu, sigma):
-  x = np.linspace(mu - 3 * sigma, mu + 3 * sigma, 100)
-  plt.plot(x, stats.norm.pdf(x, mu, sigma), "-r")
+def draw_pdf(mu, sigma):
+  x = np.linspace(mu - 4 * sigma, mu + 4 * sigma)
+  plt.plot(x, stats.norm.pdf(x, mu, sigma), "b-")
 
 
 n = 100000
@@ -54,14 +54,14 @@ if __name__ == "__main__":
 
   # Comparo el histograma realizado en el punto anterior con la función de densidad de probabilidad
   draw_histogram(numbers)
-  draw_normal_pdf(mu, sigma)
+  draw_pdf(mu, sigma)
   plt.show()
 
   # Calculo y comparo la media y la varianza de la distribución obtenida con los valores teóricos
-  average = np.average(numbers)
+  mean = np.mean(numbers)
   variance = np.var(numbers)
   print("Valores teóricos: media = {}, varianza = {}".format(mu, sigma ** 2))
-  print("Valores prácticos: media = {}, varianza = {}".format(average, variance))
+  print("Valores prácticos: media = {}, varianza = {}".format(mean, variance))
   print("Diferencia entre ambas: media = {}, varianza = {}".format(
-    mu - average if mu >= average else average - mu, 
+    mu - mean if mu >= mean else mean - mu, 
     sigma ** 2 - variance if sigma ** 2 >= variance else variance - sigma ** 2))
