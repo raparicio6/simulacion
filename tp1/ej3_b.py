@@ -2,7 +2,7 @@ import matplotlib.pyplot as plot
 import math 
 import numpy as np
 pi = math.pi
-x = np.arange(-1.6, 1.7, 0.1)
+x = np.arange(-pi/2, 0.1+ pi/2, pi/16)
 
 #b) probabilidad acumulada:
 def probabilidad_acumulada(x):
@@ -18,4 +18,3 @@ plot.ylim(0, 1)
 plot.xlim((-pi/2), (pi/2))
 plot.show()
 plot.clf()
-
