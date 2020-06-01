@@ -2,9 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import random
+from math import e, pi, sqrt
 
 
-c = (2 * stats.norm.pdf(1)) / stats.expon.pdf(1)
+c = sqrt(2 * e / pi)
 
 
 def generate_by_acceptance_rejection(n, mu, sigma):
