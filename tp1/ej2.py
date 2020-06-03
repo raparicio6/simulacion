@@ -23,27 +23,17 @@ secuencia2 = list(map(lambda n: n / modulo, secuencia2))
 # Asigna un resultado del evento según el valor de la variable "uniforme"
 def generar_valor_dado(x):
     valor = 0
-    if(x<1/6):
-        valor=1
-    elif(x<2/6):
-        valor=2
-    elif(x<3/6):
-        valor=3
-    elif(x<4/6):
-        valor=4
-    elif(x<5/6):
-        valor=5
-    else:
-        valor=6
+    for i in range(1,7):
+        if(x<(i/6) and valor==0):
+            valor=i
     return (valor)
 
 f = []
 
-for i in range(1,len(secuencia2),1):
+for i in range(1,len(secuencia2),2):
     dado_1 = generar_valor_dado(secuencia2[i])
     dado_2 = generar_valor_dado(secuencia2[i-1])
     f.append(dado_1+dado_2)
-
 
 # Histograma
 plot.hist(f, color='green', bins=11, alpha=0.5, ec='black')
