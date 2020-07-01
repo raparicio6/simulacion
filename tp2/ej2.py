@@ -10,11 +10,11 @@ class Request:
 
 
 def does_request_arrive():
-    return random.random() < 1.0/40
+    return random.random() < 1/40
 
 
 def is_request_processed():
-    return random.random() < 1.0/30
+    return random.random() < 1/30
 
 
 working_seconds = 1000
@@ -33,10 +33,15 @@ for i in range(steps):
         request = Request('example body', 'example headers')
         q.put_nowait(request)
 
-plt.plot(states)
+states_strings = list(map(str, states))
+plt.plot(states_strings, color='green', alpha=0.5, lw=1.8)
+plt.xlabel('Instantes')
+plt.ylabel('Solicitudes')
 plt.show()
 
-plt.hist(states)
+plt.hist(states_strings, color='green', ec='black', alpha=0.5, bins=20)
+plt.xlabel('Estados')
+plt.ylabel('Solicitudes')
 plt.show()
 
 steps_without_requests_to_process = len(list(filter(lambda n: n == 0, states)))
